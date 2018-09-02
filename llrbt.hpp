@@ -1,8 +1,6 @@
 #ifndef LLRBT_HPP_INCLUDED
 #define LLRBT_HPP_INCLUDED
 
-#include <cstdio>
-
 template<typename K, typename V>
 struct RBNode {
     RBNode* parent;
@@ -19,6 +17,7 @@ struct RBNode {
         this->val = node->val;
     }
 };
+
 template<typename K, typename V>
 static inline RBNode<K, V>*& next_node(RBNode<K, V>* node, const K& key) {
     return node->key > key? node->left : node->right;
