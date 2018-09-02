@@ -14,7 +14,7 @@ struct RBNode {
     RBNode(const K& _key, const V& _val, RBNode* _parent):
         parent(_parent), left(nullptr), right(nullptr),
         is_red(true), key(_key), val(_val) {}
-    SetKeyValue(RBNode* node) {
+    void SetKeyValue(RBNode* node) {
         this->key = node->key;
         this->val = node->val;
     }
@@ -150,18 +150,20 @@ class LLRBTree {
 public:
     typedef RBNode<K, V> NodeType;
 
-    void Insert(const K& key, const V& val) {
+    NodeType* Insert(const K& key, const V& val) {
+        NodeType* new_node =  nullptr;
         if (nullptr == root_) {
-            root_ = fix_up(new NodeType(key, val, nullptr));
+            new_node = root_ = fix_up(new NodeType(key, val, nullptr));
         } else {
             NodeType *node = root_;
             while (next_node(node, key)) node = next_node(node, key); // up-down
             next_node(node, key) = new NodeType(key, val, node);
-            node = next_node(node, key);
+            new_node = node = next_node(node, key);
             while (node->parent) node = fix_up(node)->parent; // bottom-up
             root_ = fix_up(node);
         }
         root_->is_red = false;
+        return new_node;
     }
 
     NodeType* Find(const K& key) const {
@@ -185,12 +187,11 @@ public:
 
     V& operator[] (const K& key) {
         auto iter = Find(key);
-        if (iter) return iter->second;
-        else return Insert(key, V{})->second;
+        if (iter) return iter->val;
+        else return Insert(key, V{})->val;
     }
 
     void Remove(const K& key) {
-        if (nullptr == Find(key)) return;
         if (nullptr == root_->left && nullptr == root_->right) {
             delete root_;
             root_ = nullptr;
@@ -199,6 +200,7 @@ public:
         NodeType* node = root_;
         NodeType* p = node->parent;
         while (true) {
+            if (nullptr == node) return;
             if (node->key > key) {
                 if (node->left &&
                     (!is_red(node->left) && !is_red(node->left->left)))

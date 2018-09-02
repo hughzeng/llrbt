@@ -33,31 +33,49 @@ int main() {
         rbt.Insert(key, 0);
     }
     clock_t t2 = clock();
-    std::cout << "llrbt insert " << data.size() << " keys takes " << (t2 - t1) << " ms\n";
+    std::cout << "llrbt insert " << data.size() << " keys takes " << (t2 - t1) / 1000 << " ms\n";
 
     t1 = clock();
     for (int key: data) {
         mp.insert({key, 0});
     }
     t2 = clock();
-    std::cout << "map insert " << data.size() << " keys takes " << (t2 - t1) << " ms\n";
+    std::cout << "map insert " << data.size() << " keys takes " << (t2 - t1) / 1000 << " ms\n";
 
     for (int i = 0; i < data.size(); ++i) {
         int j = rand_gen() % data.size();
         std::swap(data[i], data[j]);
     }
 
+    for (int i = 0; i < data.size(); ++i) {
+        int j = rand_gen() % data.size();
+        std::swap(data[i], data[j]);
+    }
+    t1 = clock();
+    for (int key: data) {
+        rbt[key];
+    }
+    t2 = clock();
+    std::cout << "llrbt query " << data.size() << " keys takes " << (t2 - t1) / 1000 << " ms\n";
+
+    t1 = clock();
+    for (int key: data) {
+        mp[key];
+    }
+    t2 = clock();
+    std::cout << "map query " << data.size() << " keys takes " << (t2 - t1) / 1000 << " ms\n";
+
     t1 = clock();
     for (int key: data) {
         rbt.Remove(key);
     }
     t2 = clock();
-    std::cout << "llrbt remove " << data.size() << " keys takes " << (t2 - t1) << " ms\n";
+    std::cout << "llrbt remove " << data.size() << " keys takes " << (t2 - t1) / 1000 << " ms\n";
 
     t1 = clock();
     for (int key: data) {
         mp.erase(key);
     }
     t2 = clock();
-    std::cout << "map remove " << data.size() << " keys takes " << (t2 - t1) << " ms\n";
+    std::cout << "map remove " << data.size() << " keys takes " << (t2 - t1) / 1000 << " ms\n";
 }
